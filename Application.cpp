@@ -77,7 +77,7 @@ bool Application::loadResources() {
 
 	// Title Message
 	TTF_SetFontStyle(regularFont, TTF_STYLE_UNDERLINE);
-	titleMessage.createMessage("Sample Music Player Version 1.0", regularFont, greenColor);
+	titleMessage.createMessage("Sample Music Player Version 2.0", regularFont, greenColor);
 	titleMessage.setPosition((800 / 2) - titleMessage.getWidth() / 2, 0);
 	TTF_SetFontStyle(regularFont, TTF_STYLE_NORMAL);
 
@@ -102,6 +102,16 @@ void Application::handleApplication() {
 
 		while (SDL_PollEvent(&userEvent)) {
 			handleEvents(userEvent);
+
+			if (playButton.handleEvents(&userEvent, ActionType::PLAY_ACTION) == ActionType::PLAY_ACTION) {
+				playMusic(musicSample);
+			} else if (pauseButton.handleEvents(&userEvent, ActionType::PAUSE_ACTION) == ActionType::PAUSE_ACTION) {
+				pauseMusic();
+			} else if (stopButton.handleEvents(&userEvent, ActionType::STOP_ACTION) == ActionType::STOP_ACTION) {
+				stopMusic();
+			}
+
+			exitButton.handleEvents(&userEvent, ActionType::EXIT_ACTION);
 		}
 
 		update();
@@ -128,10 +138,6 @@ void Application::update() {
 	if (musicClock.isStarted() == true) {
 		musicClock.update(true);
 	}
-
-	if (Mix_PlayingMusic() == 0) {
-
-	}
 }
 
 void Application::handleEvents(SDL_Event& userEvent) {
@@ -141,51 +147,15 @@ void Application::handleEvents(SDL_Event& userEvent) {
 	if (userEvent.type == SDL_KEYDOWN) {
 		switch (userEvent.key.keysym.sym) {
 			case SDLK_F1: // Play Music
-				if (Mix_PlayingMusic() == 0) {
-					std::cout << "Ran music action!" << std::endl;
-
-					while (Mix_PlayMusic(musicSample, 0) == -1) {
-						std::cout << "Hi" << std::endl;
-					}
-					musicStatusMessage.createMessage("Music is currently playing", regularFont, greenColor);
-					musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
-
-					musicTimer.start();
-				}
+				playMusic(musicSample);
 			break;
 
 			case SDLK_F2: // Stop Music
-				if (Mix_PlayingMusic() == 1) {
-					std::cout << "Stop music action!" << std::endl;
-					Mix_HaltMusic();
-					musicStatusMessage.createMessage("Music is currently stopped", regularFont, greenColor);
-					musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
-					musicTimer.stop();
-					musicClock.resetClock();
-					musicClock.stop();
-				}
+				stopMusic();
 			break;
 
-			case SDLK_F3: // Pause Music && Unpause Music
-				if (Mix_PlayingMusic() == 1 && Mix_PausedMusic() == 0) { // Pause
-					std::cout << "Pause music action!" << std::endl;
-					Mix_PauseMusic();
-					musicStatusMessage.createMessage("Music is currently paused", regularFont, greenColor);
-					musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
-					if (musicTimer.isPaused() == false) {
-						musicTimer.pause();
-						musicClock.pause();
-					}
-				} else if (Mix_PausedMusic() == 1) { // Unpause
-					std::cout << "Unpause music action!" << std::endl;
-					Mix_ResumeMusic();
-					musicStatusMessage.createMessage("Music is currently playing", regularFont, greenColor);
-					musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
-					if (musicTimer.isPaused() == true) {
-						musicTimer.resume();
-						musicClock.resume();
-					}
-				}
+			case SDLK_F3: // Pause Music && Resume Music
+				pauseMusic();
 			break;
 		}
 	} else if (userEvent.type == SDL_MOUSEBUTTONDOWN) {
@@ -239,4 +209,56 @@ void Application::free() {
 	Mix_CloseAudio();
 	Mix_Quit();
 	SDL_Quit();
+}
+
+void Application::playMusic(Mix_Music * music)
+{
+	if (Mix_PlayingMusic() == 0) {
+		std::cout << "Ran music action!" << std::endl;
+
+		while (Mix_PlayMusic(music, 0) == -1) {
+			std::cout << "Hi" << std::endl;
+		}
+		musicStatusMessage.createMessage("Music is currently playing", regularFont, greenColor);
+		musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
+
+		musicTimer.start();
+	}
+}
+
+void Application::pauseMusic()
+{
+	if (Mix_PlayingMusic() == 1 && Mix_PausedMusic() == 0) { // Pause
+		std::cout << "Pause music action!" << std::endl;
+		Mix_PauseMusic();
+		musicStatusMessage.createMessage("Music is currently paused", regularFont, greenColor);
+		musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
+		if (musicTimer.isPaused() == false) {
+			musicTimer.pause();
+			musicClock.pause();
+		}
+	}
+	else if (Mix_PausedMusic() == 1) { // Resume
+		std::cout << "Unpause music action!" << std::endl;
+		Mix_ResumeMusic();
+		musicStatusMessage.createMessage("Music is currently playing", regularFont, greenColor);
+		musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
+		if (musicTimer.isPaused() == true) {
+			musicTimer.resume();
+			musicClock.resume();
+		}
+	}
+}
+
+void Application::stopMusic()
+{
+	if (Mix_PlayingMusic() == 1) {
+		std::cout << "Stop music action!" << std::endl;
+		Mix_HaltMusic();
+		musicStatusMessage.createMessage("Music is currently stopped", regularFont, greenColor);
+		musicStatusMessage.setPosition((800 / 2) - musicStatusMessage.getWidth() / 2, 20);
+		musicTimer.stop();
+		musicClock.resetClock();
+		musicClock.stop();
+	}
 }
