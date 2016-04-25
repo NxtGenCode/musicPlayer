@@ -27,11 +27,52 @@ void Button::setTexture(const char* texturePath) {
 	}
 }
 
+ActionType Button::handleEvents(SDL_Event* event, static ActionType action)
+{
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
+		if (event->motion.x >= buttonRect.x && event->motion.x <= buttonRect.x + buttonRect.w &&
+			event->motion.y >= buttonRect.y && event->motion.y <= buttonRect.y + buttonRect.h) {
+			
+			switch (action) {
+
+			case ActionType::PLAY_ACTION:
+				std::cout << "\nPlay action ran!\n";
+				return action;
+			break;
+
+			case ActionType::PAUSE_ACTION:
+				std::cout << "\nPause action ran!\n";
+				return action;
+			break;
+
+			case ActionType::STOP_ACTION:
+				std::cout << "\nStop action ran!\n";
+				return action;
+			break;
+
+			case ActionType::EXIT_ACTION:
+				std::cout << "\nExit action ran!\n";
+				return action;
+			break;
+
+			default: std::cout << "\nError when handling button event!\n"; break;
+			}
+
+		}
+	}
+
+	return ActionType::NO_ACTION;
+}
+
 void Button::create(int w, int h, int x, int y) {
 	buttonRect.w = w;
 	buttonRect.h = h;
 	buttonRect.x = x;
 	buttonRect.y = y;
+}
+
+void Button::move(int x, int y)
+{
 }
 
 void Button::moveToLoc(int x, int y) {
@@ -51,6 +92,11 @@ void Button::draw(SDL_Renderer* render) {
 		SDL_RenderCopy(render, m_texture, NULL, &buttonRect);
 	else
 		std::cout << "Error rendering button! SDL Error: " << SDL_GetError() << std::endl;
+}
+
+bool Button::resize(int w, int h)
+{
+	return false;
 }
 
 void Button::free() {
