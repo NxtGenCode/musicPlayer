@@ -31,6 +31,7 @@ class Application
 		Button playButton;
 		Button pauseButton;
 		Button stopButton;
+		Button exitButton;
 
 		TTF_Font* regularFont;
 		SDL_Color whiteColor;
@@ -60,6 +61,11 @@ class Application
 		void handleEvents(SDL_Event& userEvent);
 		void render();
 		void free();
+
+		// Music functions
+		void playMusic(Mix_Music* music);
+		void pauseMusic();
+		void stopMusic();
 
 		bool isRunning() { return running; }
 		SDL_Renderer* getRender();
