@@ -6,6 +6,8 @@ Hotkeys:
   2. F2 - Stop
   3. F3 - Pause/Resume
 
+Music player buttons now work! You can still use your hotkeys of course.
+
 Not playing music
 <a href="https://gyazo.com/f7af3ab6abb4b8f36f59b43e6fb289b3"><img src="https://i.gyazo.com/f7af3ab6abb4b8f36f59b43e6fb289b3.png" alt="https://gyazo.com/f7af3ab6abb4b8f36f59b43e6fb289b3"/></a>
 
