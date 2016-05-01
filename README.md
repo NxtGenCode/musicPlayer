@@ -8,7 +8,7 @@ Hotkeys:
 
 Music player buttons now work! You can still use your hotkeys of course.
 
-Small appearence update and also removed the button handler as it was not what I wanted for button clicking events.
+Small appearence update and also removed the event handler from the button class and made use of events in the main application class.
 ![Test](https://i.gyazo.com/2f0c9e523e0660d7840dab294a7dca39.gif)
 
 Not playing music
