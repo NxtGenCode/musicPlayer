@@ -29,10 +29,10 @@ class Button : public Drawable
 		void draw(SDL_Renderer* render);
 		bool resize(int w, int h);
 
-		int getX() { return x; }
-		int getY() { return y; }
-		int getWidth() { return buttonRect.w; }
-		int getheight() { return buttonRect.h; }
+		inline int getX() const { return x; }
+		inline int getY() const { return y; }
+		inline int getWidth() const { return buttonRect.w; }
+		inline int getheight() const { return buttonRect.h; }
 };
 
 #endif /* _BUTTON_H_ */
