@@ -20,7 +20,7 @@ Button::Button(int w, int h, int x, int y) {
 
 void Button::setTexture(const char* texturePath) {
 	if (m_texture == nullptr) {
-		m_texture = ResourceManager::loadTexture(texturePath);
+		m_texture = ResourceManager::getInstance().loadTexture(texturePath);
 
 		if (m_texture == nullptr)
 			std::cout << "Error setting texture to button! SDL Error: " << SDL_GetError() << std::endl;
