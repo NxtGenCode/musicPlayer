@@ -8,6 +8,9 @@ Hotkeys:
 
 Music player buttons now work! You can still use your hotkeys of course.
 
+Small appearence update and also removed the button handler as it was not what I wanted for button clicking events.
+<a href="https://gyazo.com/2f0c9e523e0660d7840dab294a7dca39"><img src="hhttps://i.gyazo.com/2f0c9e523e0660d7840dab294a7dca39.gif" alt="https://gyazo.com/2f0c9e523e0660d7840dab294a7dca39"/></a>
+
 Not playing music
 <a href="https://gyazo.com/f7af3ab6abb4b8f36f59b43e6fb289b3"><img src="https://i.gyazo.com/f7af3ab6abb4b8f36f59b43e6fb289b3.png" alt="https://gyazo.com/f7af3ab6abb4b8f36f59b43e6fb289b3"/></a>
 
