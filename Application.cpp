@@ -49,7 +49,7 @@ bool Application::init(bool fullscreen) {
 	}
 	SDL_SetRenderDrawColor(mainRender, 0, 0, 0, 0);
 
-	batmanTexture = ResourceManager::loadTexture("random_bg.jpg");
+	batmanTexture = ResourceManager::getInstance().loadTexture("random_bg.jpg");
 	if (batmanTexture == nullptr) {
 		std::cout << "Error loading background." << std::endl;
 	}
@@ -91,7 +91,7 @@ bool Application::loadResources() {
 	musicTimerMessage.createMessage(musicClock.toString(), regularFont, greenColor);
 	musicTimerMessage.setPosition((800 / 2) - musicTimerMessage.getWidth() / 2, 45);
 
-	musicSample = ResourceManager::loadMusic("icecube_gangster_rap.mp3");
+	musicSample = ResourceManager::getInstance().loadMusic("icecube_gangster_rap.mp3");
 	return true;
 }
 
