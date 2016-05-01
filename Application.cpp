@@ -56,15 +56,19 @@ bool Application::init(bool fullscreen) {
 
 	playButton.create(50, 50, 0, 0);
 	playButton.setTexture("mButton_004.png");
-	playButton.moveToLoc( (800 / 2) - (50 + 25), 81);
+	playButton.moveToLoc( (800 / 2) - 75, 81);
 
 	pauseButton.create(50, 50, 0, 0);
 	pauseButton.setTexture("mButton_003.png");
-	pauseButton.moveToLoc( (800 / 2) - 25, 81);
+	pauseButton.moveToLoc((800 / 2) - 75, 81);
 
 	stopButton.create(50, 50, 0, 0);
 	stopButton.setTexture("mButton_006.png");
-	stopButton.moveToLoc( (800 / 2) + 25, 81);
+	stopButton.moveToLoc( (800 / 2) - 25, 81);
+
+	nextTrackButton.create(50, 50, 0, 0);
+	nextTrackButton.setTexture("mButton_002.png");
+	nextTrackButton.moveToLoc((800 / 2) + 25, 81);
 
 	running = true;
 	return running;
@@ -72,8 +76,6 @@ bool Application::init(bool fullscreen) {
 
 bool Application::loadResources() {
 	regularFont = TTF_OpenFont("Arial.ttf", 21);
-
-	//playButton.createButton("resources/images/buttons/mButton_004.png", 256, 256);
 
 	// Title Message
 	TTF_SetFontStyle(regularFont, TTF_STYLE_UNDERLINE);
@@ -102,16 +104,6 @@ void Application::handleApplication() {
 
 		while (SDL_PollEvent(&userEvent)) {
 			handleEvents(userEvent);
-
-			if (playButton.handleEvents(&userEvent, ActionType::PLAY_ACTION) == ActionType::PLAY_ACTION) {
-				playMusic(musicSample);
-			} else if (pauseButton.handleEvents(&userEvent, ActionType::PAUSE_ACTION) == ActionType::PAUSE_ACTION) {
-				pauseMusic();
-			} else if (stopButton.handleEvents(&userEvent, ActionType::STOP_ACTION) == ActionType::STOP_ACTION) {
-				stopMusic();
-			}
-
-			exitButton.handleEvents(&userEvent, ActionType::EXIT_ACTION);
 		}
 
 		update();
@@ -146,6 +138,7 @@ void Application::handleEvents(SDL_Event& userEvent) {
 
 	if (userEvent.type == SDL_KEYDOWN) {
 		switch (userEvent.key.keysym.sym) {
+
 			case SDLK_F1: // Play Music
 				playMusic(musicSample);
 			break;
@@ -157,11 +150,34 @@ void Application::handleEvents(SDL_Event& userEvent) {
 			case SDLK_F3: // Pause Music && Resume Music
 				pauseMusic();
 			break;
+
 		}
 	} else if (userEvent.type == SDL_MOUSEBUTTONDOWN) {
 		switch (userEvent.button.button) {
 			case SDL_BUTTON_LEFT:
-				std::cout << "Ran mouse button left click!" << std::endl;
+
+				// Play & pause button
+				if (userEvent.motion.x >= playButton.getX() &&
+					userEvent.motion.x <= playButton.getX() + playButton.getWidth() &&
+					userEvent.motion.y >= playButton.getY() &&
+					userEvent.motion.y <= playButton.getY() + playButton.getheight()) {
+					if (Mix_PlayingMusic() == 0) {
+						playMusic(musicSample);
+					}
+					else
+						pauseMusic();
+				}
+
+				// Stop button
+				if (userEvent.motion.x >= stopButton.getX() &&
+					userEvent.motion.x <= stopButton.getX() + stopButton.getWidth() &&
+					userEvent.motion.y >= stopButton.getY() &&
+					userEvent.motion.y <= stopButton.getY() + stopButton.getheight()) {
+					stopMusic();
+				}
+
+				// Next button
+
 			break;
 		}
 
@@ -179,9 +195,15 @@ void Application::render()  {
 
 	SDL_RenderClear(mainRender);
 	SDL_RenderCopy(mainRender, batmanTexture, NULL, NULL);
-	playButton.draw(mainRender);
-	pauseButton.draw(mainRender);
+
+	if (Mix_PlayingMusic() == 1 && Mix_PausedMusic() == 0) // Pause
+		pauseButton.draw(mainRender);
+	else
+		playButton.draw(mainRender);
+
 	stopButton.draw(mainRender);
+	nextTrackButton.draw(mainRender);
+
 	titleMessage.draw(mainRender);
 	musicStatusMessage.draw(mainRender);
 	musicTimerMessage.draw(mainRender);
@@ -199,6 +221,7 @@ void Application::free() {
 	playButton.free();
 	pauseButton.free();
 	stopButton.free();
+	nextTrackButton.free();
 	SDL_DestroyTexture(batmanTexture);
 	Mix_FreeMusic(musicSample);
 	SDL_DestroyRenderer(mainRender);
@@ -249,7 +272,6 @@ void Application::pauseMusic()
 		}
 	}
 }
-
 void Application::stopMusic()
 {
 	if (Mix_PlayingMusic() == 1) {
