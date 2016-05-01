@@ -27,43 +27,6 @@ void Button::setTexture(const char* texturePath) {
 	}
 }
 
-ActionType Button::handleEvents(SDL_Event* event, static ActionType action)
-{
-	if (event->type == SDL_MOUSEBUTTONDOWN) {
-		if (event->motion.x >= buttonRect.x && event->motion.x <= buttonRect.x + buttonRect.w &&
-			event->motion.y >= buttonRect.y && event->motion.y <= buttonRect.y + buttonRect.h) {
-			
-			switch (action) {
-
-			case ActionType::PLAY_ACTION:
-				std::cout << "\nPlay action ran!\n";
-				return action;
-			break;
-
-			case ActionType::PAUSE_ACTION:
-				std::cout << "\nPause action ran!\n";
-				return action;
-			break;
-
-			case ActionType::STOP_ACTION:
-				std::cout << "\nStop action ran!\n";
-				return action;
-			break;
-
-			case ActionType::EXIT_ACTION:
-				std::cout << "\nExit action ran!\n";
-				return action;
-			break;
-
-			default: std::cout << "\nError when handling button event!\n"; break;
-			}
-
-		}
-	}
-
-	return ActionType::NO_ACTION;
-}
-
 void Button::create(int w, int h, int x, int y) {
 	buttonRect.w = w;
 	buttonRect.h = h;
