@@ -9,12 +9,21 @@ class ResourceManager
 {
 
 	private:
-		ResourceManager();
+		ResourceManager(const ResourceManager&) = delete;
+		ResourceManager& operator=(const ResourceManager&) = delete;
 
 	public:
-		static SDL_Texture* loadTexture(const char* file);
-		static Mix_Music* loadMusic(const char* file);
-		static Mix_Chunk* loadChunk(const char* file);
+		ResourceManager();
+
+		static ResourceManager& getInstance() {
+			static ResourceManager p_sInstance;
+
+			return p_sInstance;
+		}
+
+		SDL_Texture* loadTexture(const char* file);
+		Mix_Music* loadMusic(const char* file);
+		Mix_Chunk* loadChunk(const char* file);
 };
 
 #endif /* _RESOURCE_MANAGER_H_ */
